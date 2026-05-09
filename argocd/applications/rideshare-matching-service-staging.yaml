@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rideshare-matching-service-staging
+  namespace: argocd-chris
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Ekene-Chris/rideshare-argo
+    targetRevision: main
+    path: apps/rideshare-matching-service/overlays/staging
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: rideshare-staging-chris
+  # No automated block: staging requires explicit `argocd app sync` (or UI click).
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=false

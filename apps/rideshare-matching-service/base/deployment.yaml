@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rideshare-matching-service
+  labels:
+    app: rideshare-matching-service
+spec:
+  selector:
+    matchLabels:
+      app: rideshare-matching-service
+  template:
+    metadata:
+      labels:
+        app: rideshare-matching-service
+    spec:
+      serviceAccountName: rideshare-matching-service
+      containers:
+        - name: rideshare-matching-service
+          image: rideshare-matching-service
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3004
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: rideshare-matching-service-config
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "3004"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: rideshare-matching-service-secrets
+                  key: DATABASE_URL
+                  optional: true
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: rideshare-matching-service-secrets
+                  key: JWT_SECRET
+                  optional: true
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: rideshare-matching-service-secrets
+                  key: REDIS_URL
+                  optional: true
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: rideshare-matching-service
+                topologyKey: kubernetes.io/hostname
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: rideshare-matching-service

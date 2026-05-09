@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rideshare-frontend
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+        - name: rideshare-frontend
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"

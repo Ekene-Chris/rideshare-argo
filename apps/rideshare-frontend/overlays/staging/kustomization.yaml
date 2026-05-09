@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: rideshare-staging-chris
+
+resources:
+  - ../../base
+
+commonLabels:
+  env: staging
+
+# Promotion: copy a verified `newTag` from dev here via PR.
+images:
+  - name: rideshare-frontend
+    newName: 596484147832.dkr.ecr.eu-north-1.amazonaws.com/chris/rideshare-frontend
+    newTag: staging-placeholder
+
+patches:
+  - path: deployment-patch.yaml
+  - path: configmap-patch.yaml
+  - path: external-secret-patch.yaml
+  - path: hpa-patch.yaml

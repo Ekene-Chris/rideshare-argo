@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rideshare-matching-service-config
+  labels:
+    app: rideshare-matching-service
+data:
+  TRIP_SERVICE_URL: ""

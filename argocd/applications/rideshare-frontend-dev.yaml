@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rideshare-frontend-dev
+  namespace: argocd-chris
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Ekene-Chris/rideshare-argo
+    targetRevision: main
+    path: apps/rideshare-frontend/overlays/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: rideshare-dev-chris
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - ApplyOutOfSyncOnly=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 1m
