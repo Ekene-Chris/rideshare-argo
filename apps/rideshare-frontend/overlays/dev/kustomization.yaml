@@ -4,19 +4,19 @@ kind: Kustomization
 namespace: rideshare-dev-chris
 
 resources:
-  - ../../base
+- ../../base
 
 commonLabels:
   env: dev
 
 # Bump newTag on each release (manual PR until CI automation lands).
 images:
-  - name: rideshare-frontend
-    newName: 596484147832.dkr.ecr.eu-north-1.amazonaws.com/chris/rideshare-frontend
-    newTag: dev-placeholder
+- name: rideshare-frontend
+  newName: 596484147832.dkr.ecr.eu-north-1.amazonaws.com/chris/rideshare-frontend
+  newTag: af97c77e52483b50cd4204f51606f381826b5819
 
 patches:
-  - path: deployment-patch.yaml
-  - path: configmap-patch.yaml
-  - path: external-secret-patch.yaml
-  - path: hpa-patch.yaml
+- path: deployment-patch.yaml
+- path: configmap-patch.yaml
+- path: external-secret-patch.yaml
+- path: hpa-patch.yaml
