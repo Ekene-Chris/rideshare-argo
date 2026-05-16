@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: rideshare-frontend
 spec:
-  replicas: 1
+  replicas: 5
   template:
     spec:
       containers:
