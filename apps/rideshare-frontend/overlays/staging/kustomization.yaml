@@ -13,7 +13,7 @@ commonLabels:
 images:
   - name: rideshare-frontend
     newName: 596484147832.dkr.ecr.eu-north-1.amazonaws.com/chris/rideshare-frontend
-    newTag: staging-placeholder
+    newTag: af97c77e52483b50cd4204f51606f381826b5819
 
 patches:
   - path: deployment-patch.yaml
